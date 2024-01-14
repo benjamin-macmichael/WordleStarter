@@ -18,10 +18,6 @@ def wordle():
     # Code that takes a random 5 letter word and places it in the first row of the grid
     random_word = random.choice(FIVE_LETTER_WORDS)
 #  This function checks to see if the word the user input is in the 5 letter word dictionary of valid wordle words
-    # the following function is nothing. i want to look at making all of our code based on functions or classes instead of these if statements. 
-    # def check_letter(p_array, p_letter):
-        # if p_letter in p_array:
-            # return True
     def enter_action(s):
 
         # initiliaze rowCount for rows, col_count for columns
