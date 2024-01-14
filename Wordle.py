@@ -12,8 +12,21 @@ from WordleGraphics import WordleGWindow, N_COLS, N_ROWS
 
 def wordle():
 
+# This function checks to see if the word the user input is in the 5 letter word dictionary of valid wordle words
     def enter_action(s):
-        gw.show_message("You have to implement this method.")
+
+        # initiliaze our variables
+        iCount = 1
+        new_guess = ''
+
+        #loop that creates the string variable for the user's guess by taking each letter one at a time and appending it to new_guess
+        while iCount < 6 :
+            new_guess = new_guess + str(gw.get_square_letter(0, iCount - 1))
+            if new_guess.lower() not in (FIVE_LETTER_WORDS) :
+                gw.show_message("Not in word list.")
+            else :
+                gw.show_message("Milestone 2 working!")
+            iCount += 1
 
     gw = WordleGWindow()
     gw.add_enter_listener(enter_action)
