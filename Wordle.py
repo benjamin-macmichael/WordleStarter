@@ -11,31 +11,35 @@ from WordleDictionary import FIVE_LETTER_WORDS
 from WordleGraphics import WordleGWindow, N_COLS, N_ROWS
 
 def wordle():
+    CORRECT_COLOR = "#66BB66" # A shade of green
+    PRESENT_COLOR = "#CCBB66" # A shade of brownish yellow
+    MISSING_COLOR = "#999999" # A shade of gray
 
-# This function checks to see if the word the user input is in the 5 letter word dictionary of valid wordle words
+    # Code that takes a random 5 letter word and places it in the first row of the grid
+    random_word = random.choice(FIVE_LETTER_WORDS)
+#  This function checks to see if the word the user input is in the 5 letter word dictionary of valid wordle words
     def enter_action(s):
 
-        # initiliaze our variables
-        iCount = 1
-        new_guess = ''
+        # initiliaze rowCount for rows, col_count for columns
+        col_count = 0
+        row_count = 0
 
         #loop that creates the string variable for the user's guess by taking each letter one at a time and appending it to new_guess
-        while iCount < 6 :
-            new_guess = new_guess + str(gw.get_square_letter(0, iCount - 1))
-            if new_guess.lower() not in (FIVE_LETTER_WORDS) :
-                gw.show_message("Not in word list.")
-            else :
-                gw.show_message("Milestone 2 working!")
-            iCount += 1
-
+        while col_count <= 4 :
+            if s.lower() not in FIVE_LETTER_WORDS:
+                gw.show_message('Sorry, that is not in our word bank')
+                break
+            if s.lower()[col_count] != random_word[col_count] and s.lower()[col_count] in random_word:
+                gw.set_square_color(row_count, col_count, PRESENT_COLOR) 
+            elif s.lower()[col_count] != random_word[col_count]: 
+                gw.set_square_color(row_count, col_count, MISSING_COLOR) 
+            elif s.lower()[col_count] == random_word[col_count]:
+                gw.set_square_color(row_count, col_count, CORRECT_COLOR)
+            elif s.lower()[col_count] in random_word:
+                gw.set_square_color(row_count, col_count, PRESENT_COLOR)
+            col_count += 1
     gw = WordleGWindow()
     gw.add_enter_listener(enter_action)
-
-# Code that takes a random 5 letter word and places it in the first row of the grid
-    random_word = random.choice(FIVE_LETTER_WORDS)
-
-    for i in range(len(random_word)):
-        gw.set_square_letter(0, i, random_word[i])
 
 # Startup code
 
