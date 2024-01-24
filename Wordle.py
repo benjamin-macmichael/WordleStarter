@@ -10,11 +10,13 @@ import random
 from WordleDictionary import FIVE_LETTER_WORDS
 from WordleGraphics import WordleGWindow, N_COLS, N_ROWS
 
-def wordle():
-    CORRECT_COLOR = "#66BB66" # A shade of green
-    PRESENT_COLOR = "#CCBB66" # A shade of brownish yellow
-    MISSING_COLOR = "#999999" # A shade of gray
+CORRECT_COLOR = "#66BB66" # A shade of green
+PRESENT_COLOR = "#CCBB66" # A shade of brownish yellow
+MISSING_COLOR = "#999999" # A shade of gray
+colorblind_mode = False
 
+def wordle():
+    
     # Code that takes a random 5 letter word and places it in the first row of the grid
     random_word = random.choice(FIVE_LETTER_WORDS)
     print(random_word)
@@ -82,27 +84,60 @@ def wordle():
                     pass
                 else:
                     print('Accident')
+                    print(key_color)
     
     def colorblind_callback():
         # Change color variables
-        global CORRECT_COLOR, PRESENT_COLOR
+        global CORRECT_COLOR, PRESENT_COLOR, colorblind_mode
+        print(colorblind_mode)
 
-        # Update existing colors
-        for row in range(N_ROWS):
-            for col in range(N_COLS):
-                current_color = gw.get_square_color(row, col)
+        # Change color variables
+        if colorblind_mode == False :
+            CORRECT_COLOR = "#0000FF"  # Update to the new color for CORRECT_COLOR
+            PRESENT_COLOR = "#FF0000"
+
+            # Update existing colors
+            for row in range(N_ROWS):
+                for col in range(N_COLS):
+                    current_color = gw.get_square_color(row, col)
+                    if current_color == "#66BB66":
+                        gw.set_square_color(row, col, "#0000FF")
+                    elif current_color == "#CCBB66":
+                        gw.set_square_color(row, col, "#FF0000")
+
+            # Update key colors
+            for ch in gw._keys:
+                current_color = gw.get_key_color(ch)
                 if current_color == "#66BB66":
-                    gw.set_square_color(row, col, "#0000FF")
+                    gw.set_key_color(ch, "#0000FF")
                 elif current_color == "#CCBB66":
-                    gw.set_square_color(row, col, "#FF0000")
+                    gw.set_key_color(ch, "#FF0000")
 
-        # Update key colors
-        for ch in gw._keys:
-            current_color = gw.get_key_color(ch)
-            if current_color == "#66BB66":
-                gw.set_key_color(ch, "#0000FF")
-            elif current_color == "#CCBB66":
-                gw.set_key_color(ch, "#FF0000")
+            colorblind_mode = True
+
+        #change back to normal mode if user clicks again
+        elif colorblind_mode == True :
+            CORRECT_COLOR = "#66BB66"
+            PRESENT_COLOR = "#CCBB66"
+
+            # Update existing colors
+            for row in range(N_ROWS):
+                for col in range(N_COLS):
+                    current_color = gw.get_square_color(row, col)
+                    if current_color == "#0000FF":
+                        gw.set_square_color(row, col, "#66BB66")
+                    elif current_color == "#FF0000":
+                        gw.set_square_color(row, col, "#CCBB66")
+
+            # Update key colors
+            for ch in gw._keys:
+                current_color = gw.get_key_color(ch)
+                if current_color == "#0000FF":
+                    gw.set_key_color(ch, "#66BB66")
+                elif current_color == "#FF0000":
+                    gw.set_key_color(ch, "#CCBB66")
+
+            colorblind_mode = False
 
     gw = WordleGWindow(colorblind_callback)
     gw.add_enter_listener(enter_action)

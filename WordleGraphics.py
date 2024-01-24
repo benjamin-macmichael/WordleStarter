@@ -95,7 +95,7 @@ class WordleGWindow:
                                  CANVAS_WIDTH / 2,
                                  MESSAGE_Y)
         def create_button():
-            button = tkinter.Button(self._canvas, text="Press Up Arrow for Colorblind Mode", command=colorblind_callback)
+            button = tkinter.Button(self._canvas, text="Press Up Arrow to Toggle Colorblind Mode", command=colorblind_callback)
             # Adjust the button position to the top right corner
             button.place(relx=1, rely=0, anchor="ne")
 
