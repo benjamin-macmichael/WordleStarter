@@ -82,8 +82,29 @@ def wordle():
                     pass
                 else:
                     print('Accident')
+    
+    def colorblind_callback():
+        # Change color variables
+        global CORRECT_COLOR, PRESENT_COLOR
 
-    gw = WordleGWindow()
+        # Update existing colors
+        for row in range(N_ROWS):
+            for col in range(N_COLS):
+                current_color = gw.get_square_color(row, col)
+                if current_color == "#66BB66":
+                    gw.set_square_color(row, col, "#0000FF")
+                elif current_color == "#CCBB66":
+                    gw.set_square_color(row, col, "#FF0000")
+
+        # Update key colors
+        for ch in gw._keys:
+            current_color = gw.get_key_color(ch)
+            if current_color == "#66BB66":
+                gw.set_key_color(ch, "#0000FF")
+            elif current_color == "#CCBB66":
+                gw.set_key_color(ch, "#FF0000")
+
+    gw = WordleGWindow(colorblind_callback)
     gw.add_enter_listener(enter_action)
 # Startup code
 if __name__ == "__main__":

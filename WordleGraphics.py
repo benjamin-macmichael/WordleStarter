@@ -61,7 +61,7 @@ MESSAGE_Y = TOP_MARGIN + BOARD_HEIGHT + MESSAGE_SEP
 class WordleGWindow:
     """This class creates the Wordle window."""
 
-    def __init__(self):
+    def __init__(self, colorblind_callback=None):
         """Creates the Wordle window."""
 
         def create_grid():
@@ -94,6 +94,16 @@ class WordleGWindow:
             return WordleMessage(self._canvas,
                                  CANVAS_WIDTH / 2,
                                  MESSAGE_Y)
+        def create_button():
+            button = tkinter.Button(self._canvas, text="Press Up Arrow for Colorblind Mode", command=colorblind_callback)
+            # Adjust the button position to the top right corner
+            button.place(relx=1, rely=0, anchor="ne")
+
+            button.focus_set()
+
+            # Bind arrow keys and Enter key to trigger the button's command
+            button.bind("<Up>", lambda event: button.invoke())
+            return button
 
         def key_action(tke):
             if isinstance(tke, str):
@@ -169,6 +179,7 @@ class WordleGWindow:
         self._grid = create_grid()
         self._message = create_message()
         self._keys = create_keyboard()
+        self._button = create_button()
         self._enter_listeners = [ ]
         root.bind("<Key>", key_action)
         root.bind("<ButtonPress-1>", press_action)
