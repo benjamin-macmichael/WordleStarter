@@ -16,52 +16,72 @@ def wordle():
     MISSING_COLOR = "#999999" # A shade of gray
 
     # Code that takes a random 5 letter word and places it in the first row of the grid
-    # random_word = random.choice(FIVE_LETTER_WORDS)
-    random_word = 'hello'
-    
+    random_word = random.choice(FIVE_LETTER_WORDS)
+    print(random_word)
+    next_row = False
+
     def enter_action(s):
-        # initiliaze rowCount for rows, col_count for columns
-        col_count = 0
-        row = gw.get_current_row()
-        # this logic puts the user on the next row after hitting enter. needs to only happen if they have success
-        if gw.get_square_color(row,4) != None and row != 5:
-            gw.set_current_row(row+1)
-        # sets all keys to green and ends function if they are correct.
-        if s.lower() == random_word:
-            for i in range(0,5):
-                gw.set_square_color(row, i, CORRECT_COLOR)
-                gw.set_key_color(s[i], CORRECT_COLOR)
-
-            return
-
-
-        #loop that creates the string variable for the user's guess by taking each letter one at a time and appending it to new_guess
-        while col_count <= 4 :
+        global complete # var to see if user has guessed correctly.
+        global next_row
+        # setting up for after they get the word right so they can't continue typing
+        try:
+            if complete == True:
+                # gw.set_current_row(row)
+                pass
+        except:
+            complete = False
+                
+        if complete != True:
+            row = gw.get_current_row()
             if s.lower() not in FIVE_LETTER_WORDS:
                 gw.show_message('Sorry, that is not in our word bank')
-                break  
-            if s.lower()[col_count] != random_word[col_count] and s.lower()[col_count] in random_word:
-                gw.set_square_color(row, col_count, PRESENT_COLOR) 
-                gw.set_key_color(s[col_count], PRESENT_COLOR)
-
-            elif s.lower()[col_count] != random_word[col_count]: 
-                gw.set_square_color(row, col_count, MISSING_COLOR) 
-                gw.set_key_color(s[col_count], MISSING_COLOR)
-
-            elif s.lower()[col_count] == random_word[col_count]:
-                gw.set_square_color(row, col_count, CORRECT_COLOR)
-                gw.set_key_color(s[col_count], CORRECT_COLOR)
-
+                next_row = False # set next row to false bc it is not a correct word
+                return
             else:
-                gw.set_square_color(row, col_count, MISSING_COLOR) 
-                gw.set_key_color(s[col_count], MISSING_COLOR)
-
-            col_count += 1
+                next_row = True # set to true for the next row to go. 
+            # this logic puts the user on the next row after hitting enter. needs to only happen if they have success
+            if next_row and row != N_ROWS - 1:
+                gw.set_current_row(row+1)
             
-                
-        if s.lower() == random_word:
-            gw.show_message('Congrats!')
-            return 
+            # sets all keys to green and ends function if they are correct.
+            if s.lower() == random_word:
+                for i in range(0,5):
+                    gw.set_square_color(row, i, CORRECT_COLOR)
+                    gw.set_key_color(s[i], CORRECT_COLOR)
+                # say congrats since they won!
+                gw.show_message('Congrats!')
+                complete = True
+                return
+    
+            # divide into two arrays for tracking and setting up for colors.
+            guess_array = list(s.lower())
+            correct_array = list(random_word)
+            color_keys_array = list(s)
+            pos = 0
+            for i in range(0,5):
+                # iterate to 
+                if guess_array[i] == correct_array[i]:
+                    guess_array[i] = CORRECT_COLOR
+                    correct_array[i] = 'correct'
+                elif guess_array[i] in correct_array:
+                    pos = len(correct_array) - 1 - correct_array[::-1].index(guess_array[i])
+                    correct_array[pos] = 'present'
+                    guess_array[i] = PRESENT_COLOR
+                else:
+                    guess_array[i] = MISSING_COLOR
+                # set up for coloring the keys
+                key_color = gw.get_key_color(color_keys_array[i].upper()) # var to get the key color
+                gw.set_square_color(row, i, guess_array[i])
+                # iterate through each option to color the keys correctly
+                if key_color == MISSING_COLOR or key_color == "#FFFFFF":
+                    gw.set_key_color(color_keys_array[i], guess_array[i])
+                elif key_color == PRESENT_COLOR:
+                    if guess_array[i] == MISSING_COLOR:
+                        gw.set_key_color(color_keys_array[i], guess_array[i])
+                elif key_color == CORRECT_COLOR:
+                    pass
+                else:
+                    print('Accident')
 
     gw = WordleGWindow()
     gw.add_enter_listener(enter_action)
