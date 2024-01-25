@@ -101,10 +101,9 @@ def wordle():
                 if row < 5:
                     gw.set_current_row(row+1)
     
-    def colorblind_callback():
+    def colorblindMode():
         # Change color variables
         global CORRECT_COLOR, PRESENT_COLOR, colorblind_mode
-        print(colorblind_mode)
 
         # Change color variables
         if colorblind_mode == False :
@@ -154,7 +153,7 @@ def wordle():
 
             colorblind_mode = False
 
-    gw = WordleGWindow(colorblind_callback)
+    gw = WordleGWindow(colorblindMode)
     gw.add_enter_listener(enter_action)
 # Startup code
 if __name__ == "__main__":
