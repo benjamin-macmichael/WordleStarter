@@ -14,24 +14,20 @@ CORRECT_COLOR = "#66BB66" # A shade of green
 PRESENT_COLOR = "#CCBB66" # A shade of brownish yellow
 MISSING_COLOR = "#999999" # A shade of gray
 colorblind_mode = False
+next_row = False
+#this variable serves a couple purposes, once it is set to True in the logic then the game is complete and the user is not taken to the next row and the keyboard will
+#not accept any more input
+complete = False
 
 def wordle():
-    
+
     # Code that takes a random 5 letter word and places it in the first row of the grid
     random_word = random.choice(FIVE_LETTER_WORDS)
     print(random_word)
-    next_row = False
+    
 
     def enter_action(s):
-        global complete # var to see if user has guessed correctly.
-        global next_row
-        # setting up for after they get the word right so they can't continue guessing
-        try:
-            if complete == True:
-                # gw.set_current_row(row)
-                pass
-        except:
-            complete = False
+        global complete
                 
         if complete != True:
             row = gw.get_current_row()
@@ -97,9 +93,22 @@ def wordle():
 
                 if gw.get_current_row() == 5:
                     gw.show_message(f"Sorry, the word was {random_word}")
+                    #complete the game and call the stopkeys method
+                    complete = True
+                    stopKeys()
 
                 if row < 5:
                     gw.set_current_row(row+1)
+
+    #this method is called when the game is complete and 
+    #sends a value of True to the key_action method in the graphics file to let that method know to not process any more input from keys
+    def stopKeys():
+        global complete
+        output = False
+        if complete == True:
+            output = True
+        return output
+        
     
     def colorblindMode():
         # Change color variables
@@ -153,7 +162,8 @@ def wordle():
 
             colorblind_mode = False
 
-    gw = WordleGWindow(colorblindMode)
+    #we send the colorblindMode and stopKeys methods as callback methods for the WordleGraphics.py file to have access to them
+    gw = WordleGWindow(colorblindMode, stopKeys)
     gw.add_enter_listener(enter_action)
 # Startup code
 if __name__ == "__main__":

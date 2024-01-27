@@ -61,7 +61,9 @@ MESSAGE_Y = TOP_MARGIN + BOARD_HEIGHT + MESSAGE_SEP
 class WordleGWindow:
     """This class creates the Wordle window."""
 
-    def __init__(self, colorblindMode=None):
+    #we are using 2 callback methods as parameters in here, one of which is used to toggle colorblind mode, and the other is used to tell the
+    #key_action method to stop executing if the user guessed correctly or ran out of guesses (the logic for it is in the wordle.py file)
+    def __init__(self, colorblindMode=None, stopKeys=False):
         """Creates the Wordle window."""
 
         def create_grid():
@@ -106,6 +108,11 @@ class WordleGWindow:
             return button
 
         def key_action(tke):
+            #This is to stop the system from accepting keyboard input after the user has run out of guesses, or even after they guess correctly (not that they would want to
+            #keep typing after guessing correctly, but we still don't want them to be able to)
+            if stopKeys() == True:
+                return
+            
             if isinstance(tke, str):
                 ch = tke.upper()
             else:
