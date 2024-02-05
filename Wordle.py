@@ -19,15 +19,14 @@ next_row = False
 #not accept any more input
 complete = False
 
-global winStatistic 
-winStatistic = []
+# global winStatistic 
+# winStatistic = []
 
 def wordle():
 
     # Code that takes a random 5 letter word and places it in the first row of the grid
     random_word = random.choice(FIVE_LETTER_WORDS)
     print(random_word)
-
 
     def enter_action(s):
         global complete
@@ -61,7 +60,7 @@ def wordle():
                     # say congrats since they won!
                     gw.show_message(f'Congrats! You guessed it in {row  + 1}!')
                     complete = True
-                    winStatistic.append(row+1)
+                    # winStatistic.append(row+1)
                     return
 
                 # divide into two arrays for tracking and setting up for colors.
